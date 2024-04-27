@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "objectivepersonality-ai"
+version = "0.1.0"
+description = "Objective Personality AI"
+authors = ["Stanislaw Baranski <stan@stan.bar>"]
+license = "PolyForm Perimeter License 1.0.1"
+readme = "README.md"
+packages = [
+  { include = "embeddings" },
+  { include = "ops" },
+  { include = "train" },
+  { include = "utils" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+transformers = "^4.40.1"
+sentence-transformers = "^2.7.0"
+gritlm = "^1.0.0"
+python-dotenv = "^1.0.1"
+pandas = "^2.2.2"
+tiktoken = "^0.6.0"
+scipy = "^1.13.0"
+scikit-learn = "^1.4.2"
+numpy = "^1.26.4"
+keras = "^3.3.3"
+tensorflow = "^2.16.1"
+torch = "^2.3.0"
+matplotlib = "^3.8.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
