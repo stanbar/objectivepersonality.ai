@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 from dotenv import load_dotenv, find_dotenv
-from embeddings.gritlm_embedding_model import GritLMEmbeddings
+from objectivepersonality_ai.embeddings.gritlm_embedding_model import GritLMEmbeddings
 
 load_dotenv(
     find_dotenv(usecwd=False, raise_error_if_not_found=True)

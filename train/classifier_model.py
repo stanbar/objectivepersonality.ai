@@ -2,13 +2,10 @@ from abc import abstractmethod
 import ast
 import os
 from dotenv import load_dotenv, find_dotenv
-from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.discriminant_analysis import StandardScaler
-from sklearn.model_selection import StratifiedKFold
 
-from ops.ops import COINS_AUXILIARY, COINS_DICT
+from objectivepersonality_ai.ops import COINS_AUXILIARY, COINS_DICT
 
 _ = load_dotenv(find_dotenv(usecwd=False, raise_error_if_not_found=True))
 

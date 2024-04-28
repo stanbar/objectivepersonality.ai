@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer
-from embeddings import EmbeddingModel
+from embeddings_model import EmbeddingModel
 
 # https://huggingface.co/Salesforce/SFR-Embedding-Mistral
 

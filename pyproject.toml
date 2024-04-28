@@ -4,13 +4,11 @@ version = "0.1.0"
 description = "Objective Personality AI"
 authors = ["Stanislaw Baranski <stan@stan.bar>"]
 license = "PolyForm Perimeter License 1.0.1"
+homepage = "https://objectivepersonality.ai"
+repository = "https://github.com/stanbar/objectivepersonality.ai"
 readme = "README.md"
-packages = [
-  { include = "embeddings" },
-  { include = "ops" },
-  { include = "train" },
-  { include = "utils" }
-]
+packages = [{ include = "objectivepersonality_ai" }]
+
 
 [tool.poetry.dependencies]
 python = "^3.12"
