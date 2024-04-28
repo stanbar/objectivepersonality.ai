@@ -30,8 +30,8 @@ GENERALISATION = "Generalisation"
 FLEX = "Flex"
 FRIENDS = "Friends"
 
-mSeCoin = "mSe"
-mDeCoin = "mDe"
+ModalitySensoryCoin = "ModalitySensory"
+ModalityDeCoin = "ModalityDe"
 ObserverDeciderCoin = OBSERVER + DECIDER
 DiDeCoin = DI + DE
 OiOeCoin = OI + OE
@@ -45,8 +45,8 @@ FlexFriendsCoin = FLEX + FRIENDS
 GeneralisationSpecialisationCoin = GENERALISATION + SPECIALISATION
 
 COINS_DICT = {
-    mSeCoin: (FEMININE, MASCULINE),
-    mDeCoin: (FEMININE, MASCULINE),
+    ModalitySensoryCoin: (FEMININE, MASCULINE),
+    ModalityDeCoin: (FEMININE, MASCULINE),
     ObserverDeciderCoin: (OBSERVER, DECIDER),
     DiDeCoin: (DI, DE),
     OiOeCoin: (OI, OE),
@@ -71,8 +71,8 @@ COINS_AUXILIARY = {
 
 @dataclass
 class OpsProfile:
-    mSe: str
-    mDe: str
+    ModalitySensory: str
+    ModalityDe: str
     ObserverDecider: str
     DiDe: str
     OiOe: str
@@ -90,8 +90,8 @@ def decode_op_code(ops) -> OpsProfile:
     match = PATTERN.match(ops)
     if match:
         (
-            mSe,
-            mDe,
+            modalitySensory,
+            modalityDe,
             function1,
             function2,
             animal1,
@@ -110,11 +110,11 @@ def decode_op_code(ops) -> OpsProfile:
                 return None
 
         coins = {
-            mSeCoin: get_coin_value(
-                mSe == MASCULINE, mSe == FEMININE, MASCULINE, FEMININE
+            ModalitySensoryCoin: get_coin_value(
+                modalitySensory == MASCULINE, modalitySensory == FEMININE, MASCULINE, FEMININE
             ),
-            mDeCoin: get_coin_value(
-                mDe == MASCULINE, mDe == FEMININE, MASCULINE, FEMININE
+            ModalityDeCoin: get_coin_value(
+                modalityDe == MASCULINE, modalityDe == FEMININE, MASCULINE, FEMININE
             ),
             ObserverDeciderCoin: (
                 OBSERVER
@@ -274,7 +274,7 @@ def validate_op_code(ops):
 
 
 def format_coins(coins):
-    return f"""Modalities: {coins[mSeCoin]}{coins[mDeCoin]}
+    return f"""Modalities: {coins[ModalitySensoryCoin]}{coins[ModalityDeCoin]}
 ObserverDecider: {coins[ObserverDeciderCoin]}
 DiDe: {coins[DiDeCoin]}
 OiOe: {coins[OiOeCoin]}

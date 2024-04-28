@@ -4,7 +4,7 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score
 from scipy.spatial.distance import cdist
 
-from train.classifier_model import ClassifierModel
+from classifier_model import ClassifierModel
 
 class CentroidsClassifier(ClassifierModel):
     def build_classification_model(self, X, y):

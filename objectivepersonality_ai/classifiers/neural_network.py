@@ -5,7 +5,7 @@ from keras import layers
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
-from train.classifier_model import ClassifierModel
+from classifier_model import ClassifierModel
 
 class NeuralNetworkClassifier(ClassifierModel):
     def build_classification_model(self, input_size: int) -> keras.Model:

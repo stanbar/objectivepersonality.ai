@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
-from train.classifier_model import ClassifierModel
+from classifier_model import ClassifierModel
 
 class PrototypicalNetwork(nn.Module):
     def __init__(self, input_size, hidden_size):
