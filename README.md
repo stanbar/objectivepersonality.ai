@@ -16,8 +16,8 @@ where:
 
 - `name` a person name normalised with `utils/utils.py#normalise_name(name)`
 - `ops_type` full ops type (e.g. MF-Ni/Fi-SB/P(C) [2])
-- `mSe` sexual modality of the sensory function
-- `mDe` sexual modality of the extroverted decider function
+- `ModalitySensory: 'F' | 'M'` sexual modality of the sensory function
+- `ModalityDe: 'F' | 'M'` sexual modality of the extroverted decider function
 - `ObserverDecider: 'Observer' | 'Decider' | None`
 - `DiDe: 'Di' | 'De' | None`
 - `OiOe: 'Oi' | 'Oe' | None`
