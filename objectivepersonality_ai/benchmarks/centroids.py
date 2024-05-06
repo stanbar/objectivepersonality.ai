@@ -1,5 +1,5 @@
 def evaluate_centroids():
-  from objectivepersonality_ai.classifiers.centroids import CentroidsClassifier
+  from ..classifiers.centroids import CentroidsClassifier
   centroids_classifier = CentroidsClassifier()
   centroids_classifier.evaluate()
 
