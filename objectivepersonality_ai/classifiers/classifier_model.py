@@ -19,11 +19,11 @@ coins = COINS_DICT | COINS_AUXILIARY
 class ClassifierModel:
 
     @abstractmethod
-    def _build_from_dataset(X, y, coin):
+    def _build_from_dataset(self, X, y, coin):
       pass
         
     @abstractmethod
-    def _evaluate(X, y, coin):
+    def _evaluate(self, X, y, coin):
       pass
 
     def build_from_dataset(self, save=False):

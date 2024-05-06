@@ -4,7 +4,7 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score
 from scipy.spatial.distance import cdist
 
-from classifier_model import ClassifierModel
+from .classifier_model import ClassifierModel
 
 class CentroidsClassifier(ClassifierModel):
     def build_classification_model(self, X, y):
@@ -20,7 +20,7 @@ class CentroidsClassifier(ClassifierModel):
         # Assign labels based on the closest prototype
         return np.argmin(distances, axis=1)
 
-    def _evaluate(self, X, y):
+    def _evaluate(self, X, y, coin):
         kf = KFold(n_splits=5, shuffle=True, random_state=42)
         accuracies = []
 

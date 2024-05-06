@@ -5,9 +5,13 @@ from keras import layers
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
-from classifier_model import ClassifierModel
+from .classifier_model import ClassifierModel
 
 class NeuralNetworkClassifier(ClassifierModel):
+
+    def __init__(self, plot_history=False):
+        self.plot_history=plot_history
+
     def build_classification_model(self, input_size: int) -> keras.Model:
         inputs = x = keras.Input(shape=(input_size,))
         x = layers.Dense(input_size, activation='relu')(x)
@@ -34,7 +38,8 @@ class NeuralNetworkClassifier(ClassifierModel):
                 'val_accuracy': history.history['val_accuracy']
             }
 
-        self.plot_history(histories, coin)
+        if self.plot_history:
+            self.plot_history(histories, coin)
 
         mean_accuracy = np.mean([history['val_accuracy'][-1] for history in histories.values()])
         return mean_accuracy
