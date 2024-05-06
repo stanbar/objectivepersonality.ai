@@ -31,21 +31,17 @@ where:
 poetry install
 ```
 
-### Train neural_network classifier
+## Compute embeddings
 
 ```sh
-poetry run python train/neural_network.py
+poetry run append_embeddings.py
 ```
 
-### Train centroids
+Takes entries from `TRANSCRIPTS_CSV` and outputs to `TRANSCRIPTS_WITH_EMBEDDINGS_CSV`
+
+
+### Run benchmark for all classifiers
 
 ```sh
-poetry run python train/centroids.py
+poetry run python benchmark_classifiers.py
 ```
-
-### Train prototypical networks
-
-```sh
-poetry run python train/proto_networks.py
-```
-
