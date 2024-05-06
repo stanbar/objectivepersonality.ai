@@ -43,5 +43,5 @@ Takes entries from `TRANSCRIPTS_CSV` and outputs to `TRANSCRIPTS_WITH_EMBEDDINGS
 ### Run benchmark for all classifiers
 
 ```sh
-poetry run python benchmark_classifiers.py
+./benchmark.sh
 ```
