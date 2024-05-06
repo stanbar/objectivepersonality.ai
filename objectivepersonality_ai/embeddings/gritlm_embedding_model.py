@@ -1,6 +1,6 @@
 from gritlm import GritLM
 from numpy import ndarray
-from embeddings_model import EmbeddingModel
+from .embeddings_model import EmbeddingModel
 
 
 class GritLMEmbeddings(EmbeddingModel):
