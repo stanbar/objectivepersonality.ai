@@ -1,5 +1,5 @@
 def evaluate_proto_networks():
-  from ..classifiers.proto_networks import ProtoNetworksClassifier
+  from objectivepersonality_ai.classifiers.proto_networks import ProtoNetworksClassifier
   proto_netoworks_classifier = ProtoNetworksClassifier()
   proto_netoworks_classifier.evaluate()
 

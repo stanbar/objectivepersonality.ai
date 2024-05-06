@@ -3,10 +3,10 @@
 echo "Running benchmarks..."
 
 echo "---------Centroids----------"
-python3 objectivepersonality_ai/benchmarks/centroids.py
+python3 benchmark_centroids.py
 
 echo "---------Neural-Network----------"
-python3 objectivepersonality_ai/benchmarks/neural_network.py
+python3 benchmark_neural_network.py
 
 echo "---------Proto-Networks----------"
-python3 objectivepersonality_ai/benchmarks/proto_networks.py
+python3 benchmark_proto_networks.py
