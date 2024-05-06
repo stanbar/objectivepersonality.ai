@@ -22,13 +22,11 @@ df = pd.read_csv(TRANSCRIPTS_CSV)
 if 'embeddings' not in df.columns:
     df['embeddings'] = np.nan  # Initialize as NaN
 
-model = GritLMEmbeddings()
+model = GritLMEmbeddings("Represent the person's areas of fears and avoidants, and confidence and responsibility")
 
 def calculate_embeddings(texts, tokens_length):
     """Function to calculate embeddings for a list of texts"""
-    embeddings = model.embed(texts,
-    #  instruction=gritlm_instruction("Represent the transcript of a person talking about his life to classify its personality type, traits, fears, and confidence")
-    )
+    embeddings = model.embed(texts)
     print(f"Computed embedding from {tokens_length} tokens")
     return embeddings[0]
 
