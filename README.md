@@ -1,47 +1,70 @@
-# objectivepersonality.ai
+# Objective Personality AI
+
+Objective Personality AI (OPAI) is project aimed at developing AI models to predict personality types based on video transcripts. This project utilizes datasets gathered from various sources, including YouTube, and incorporates machine learning techniques to achieve its goal.
 
 ## Dataset
 
-Gathering data is one of the biggest problems in the goal of building OPS AI typing. Currently there are two known possibilities:
+The success of AI typing relies heavily on the quality and variety of data it can access. Currently, there are two methods for gathering data:
 
-- Scrape data from youtube videos following [this project](https://github.com/michalbaldyga/personality-type-prediction-ops/tree/dev/backend/gathering_data)
-- Use the dataset created by [Tom Aylott (subtlegradient)](https://huggingface.co/datasets/subtlegradient/aop-dataset-2022-11-10-interview-lines-by-youtube)
+- Utilizing the dataset created by [Tom Aylott (subtlegradient)](https://huggingface.co/datasets/subtlegradient/aop-dataset-2022-11-10-interview-lines-by-youtube)
+- Scraping data from YouTube videos using [this project](https://github.com/michalbaldyga/personality-type-prediction-ops/tree/dev/backend/gathering_data)
 
-This repository does not specify how the dataset is gathered. However, it assumes a dataset provided in a file specified in `.env` field `TRANSCRIPTS_CSV=<path_to_dataset.csv>`, of the following format:
+The repository assumes the dataset is provided in the following CSV format specified in the `.env` file under the `TRANSCRIPTS_CSV=<path_to_dataset.csv>`:
+
 
 ```csv
-name,ops_type,mSe,mDe,ObserverDecider,DiDe,OiOe,SN,TF,SleepPlay,BlastConsume,InfoEnergy,IntroExtro,FlexFriends,GeneralisationSpecialisation,transcript_tokens_length,transcript
+name,ops_type,ModalitySensory,ModalityDe,ObserverDecider,DiDe,OiOe,SN,TF,SleepPlay,BlastConsume,InfoEnergy,IntroExtro,FlexFriends,GeneralisationSpecialisation,transcript_tokens_length,transcript
 ```
-where:
 
-- `name` a person name normalised with `utils/utils.py#normalise_name(name)`
-- `ops_type` full ops type (e.g. MF-Ni/Fi-SB/P(C) [2])
-- `ModalitySensory: 'F' | 'M'` sexual modality of the sensory function
-- `ModalityDe: 'F' | 'M'` sexual modality of the extroverted decider function
+Field descriptions:
+
+- `name` Normalized person's name using `utils#normalise_name(name)`
+- `ops_type` Full ops type (e.g. MF-Ni/Fi-SB/P(C) [2])
+- `ModalitySensory: 'F' | 'M' | None` Sexual modality of the sensory function
+- `ModalityDe: 'F' | 'M' | None` Sexual modality of the extroverted decider function
 - `ObserverDecider: 'Observer' | 'Decider' | None`
 - `DiDe: 'Di' | 'De' | None`
 - `OiOe: 'Oi' | 'Oe' | None`
 - ...
-- `transcript_tokens_length` is a number of tokens computed from `tiktoken.get_encoding("cl100k_base")`
-- `transcript` is a transcript of a person
+- `transcript_tokens_length` number of tokens computed with `tiktoken.get_encoding("cl100k_base")`
+- `transcript` transcript of a person
 
-## Run
+## Installation
+
+Clone the repository and navigate to the project directory:
+
+```sh
+git clone https://github.com/stanbar/objectivepersonality.ai.git
+cd objectivepersonality.ai
+```
+
+Install dependencies:
 
 ```sh
 poetry install
 ```
+## Usage
 
-## Compute embeddings
+### Compute embeddings
+
+To compute embeddings based on the transcripts from `TRANSCRIPTS_CSV` and outputs to `TRANSCRIPTS_WITH_EMBEDDINGS_CSV`
 
 ```sh
 poetry run append_embeddings.py
 ```
 
-Takes entries from `TRANSCRIPTS_CSV` and outputs to `TRANSCRIPTS_WITH_EMBEDDINGS_CSV`
-
-
 ### Run benchmark for all classifiers
+
+To run benchmarks for all classifiers:
 
 ```sh
 ./benchmark.sh
 ```
+
+# License
+
+This project is licensed under the PolyForm Perimeter License 1.0.1 - see the LICENSE file for details.
+
+# Support
+
+For support, raise an issue in the GitHub issue tracker or contact the maintainers via hello@objectivepersonality.ai
