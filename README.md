@@ -11,6 +11,8 @@ To run the scripts effectively, especially those involving computing embeddings 
 
 Note: These requirements are crucial for performance and avoiding runtime errors due to insufficient resources.
 
+For alternative models see [MTEB leaderboard](https://huggingface.co/spaces/mteb/leaderboard)
+
 
 ## Dataset
 
