@@ -2,6 +2,16 @@
 
 Objective Personality AI (OPAI) is project aimed at developing AI models to predict personality types based on video transcripts. This project utilizes datasets gathered from various sources, including YouTube, and incorporates machine learning techniques to achieve its goal.
 
+## System Requirements
+
+To run the scripts effectively, especially those involving computing embeddings like `GritLM/GritLM-7B`, ensure your system meets the following requirements:
+
+- **GPU Memory**: At least 27 GB of GPU memory is required to compute embeddings with the `GritLM/GritLM-7B` model.
+- **Processing Time**: It takes approximately 5 seconds to compute embeddings per dataset entry.
+
+Note: These requirements are crucial for performance and avoiding runtime errors due to insufficient resources.
+
+
 ## Dataset
 
 The success of AI typing relies heavily on the quality and variety of data it can access. Currently, there are two methods for gathering data:
