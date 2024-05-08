@@ -16,67 +16,76 @@ if TRANSCRIPTS_WITH_EMBEDDINGS_CSV is None:
 
 coins = COINS_DICT | COINS_AUXILIARY
 
+
 class ClassifierModel:
 
     @abstractmethod
     def _build_from_dataset(self, X, y, coin):
-      pass
-        
+        pass
+
     @abstractmethod
     def _evaluate(self, X, y, coin):
-      pass
+        pass
 
     def build_from_dataset(self, save=False):
-      df = self.load_data()
-      X = np.array([ast.literal_eval(emb) if isinstance(emb, str) else emb for emb in df['embeddings']])
+        df = self.load_data()
+        X = np.array(
+            [
+                ast.literal_eval(emb) if isinstance(emb, str) else emb
+                for emb in df["embeddings"]
+            ]
+        )
 
-      for coin, classes in coins.items():
-          y = df[coin].apply(lambda x: classes.index(x)).values
+        for coin, classes in coins.items():
+            y = df[coin].apply(lambda x: classes.index(x)).values
 
-          # Scale features for neural network suitability
-          # scaler = StandardScaler()
-          # X = scaler.fit_transform(X)
+            # Scale features for neural network suitability
+            # scaler = StandardScaler()
+            # X = scaler.fit_transform(X)
 
-          mean_accuracy = self._build_from_dataset(X, y, coin, save=save)
-          print(f"Coin {coin}, average accuracy: {mean_accuracy}")
-
+            mean_accuracy = self._build_from_dataset(X, y, coin, save=save)
+            print(f"Coin {coin}, average accuracy: {mean_accuracy}")
 
     def evaluate(self):
-      df = self.load_data()
-      X = np.array([ast.literal_eval(emb) if isinstance(emb, str) else emb for emb in df['embeddings']])
+        df = self.load_data()
+        X = np.array(
+            [
+                ast.literal_eval(emb) if isinstance(emb, str) else emb
+                for emb in df["embeddings"]
+            ]
+        )
 
-      for coin, classes in coins.items():
-          y = df[coin].apply(lambda x: classes.index(x)).values
+        for coin, classes in coins.items():
+            y = df[coin].apply(lambda x: classes.index(x)).values
 
-          # Scale features for neural network suitability
-          # scaler = StandardScaler()
-          # X = scaler.fit_transform(X)
+            # Scale features for neural network suitability
+            # scaler = StandardScaler()
+            # X = scaler.fit_transform(X)
 
-          mean_accuracy = self._evaluate(X, y, coin)
-          print(f"Coin {coin}, average accuracy: {mean_accuracy}")
-
+            mean_accuracy = self._evaluate(X, y, coin)
+            print(f"Coin {coin}, average accuracy: {mean_accuracy}")
 
     def load_data(self) -> pd.DataFrame:
-      df = pd.read_csv(TRANSCRIPTS_WITH_EMBEDDINGS_CSV)
+        df = pd.read_csv(TRANSCRIPTS_WITH_EMBEDDINGS_CSV)
 
-      df['ObserverAxis'] = np.select(
-          [
-              (df['OiOe'] == 'Oi') & (df['SN'] == 'S'),
-              (df['OiOe'] == 'Oi') & (df['SN'] == 'N'),
-              (df['OiOe'] == 'Oe') & (df['SN'] == 'S'),
-              (df['OiOe'] == 'Oe') & (df['SN'] == 'N')
-          ],
-          ['Ne/Si', 'Se/Ni', 'Se/Ni', 'Ne/Si'],
-      )
+        df["ObserverAxis"] = np.select(
+            [
+                (df["OiOe"] == "Oi") & (df["SN"] == "S"),
+                (df["OiOe"] == "Oi") & (df["SN"] == "N"),
+                (df["OiOe"] == "Oe") & (df["SN"] == "S"),
+                (df["OiOe"] == "Oe") & (df["SN"] == "N"),
+            ],
+            ["Ne/Si", "Se/Ni", "Se/Ni", "Ne/Si"],
+        )
 
-      df['DeciderAxis'] = np.select(
-          [
-              (df['DiDe'] == 'Di') & (df['TF'] == 'T'),
-              (df['DiDe'] == 'Di') & (df['TF'] == 'F'),
-              (df['DiDe'] == 'De') & (df['TF'] == 'T'),
-              (df['DiDe'] == 'De') & (df['TF'] == 'F')
-          ],
-          ['Fe/Ti', 'Te/Fi', 'Te/Fi', 'Fe/Ti'],
-      )
+        df["DeciderAxis"] = np.select(
+            [
+                (df["DiDe"] == "Di") & (df["TF"] == "T"),
+                (df["DiDe"] == "Di") & (df["TF"] == "F"),
+                (df["DiDe"] == "De") & (df["TF"] == "T"),
+                (df["DiDe"] == "De") & (df["TF"] == "F"),
+            ],
+            ["Fe/Ti", "Te/Fi", "Te/Fi", "Fe/Ti"],
+        )
 
-      return df
+        return df

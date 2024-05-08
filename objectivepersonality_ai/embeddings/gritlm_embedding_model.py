@@ -17,7 +17,4 @@ class GritLMEmbeddings(EmbeddingModel):
         )
 
     def _embed(self, sentence):
-        return self.model.encode(
-            sentence,
-             instruction=self.instruction
-        )
+        return self.model.encode(sentence, instruction=self.instruction)

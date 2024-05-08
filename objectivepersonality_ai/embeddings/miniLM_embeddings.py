@@ -3,6 +3,7 @@ from embeddings_model import EmbeddingModel
 
 # https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 
+
 class MiniLMEmbeddings(EmbeddingModel):
     def __init__(self) -> None:
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"

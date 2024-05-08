@@ -6,17 +6,20 @@ from scipy.spatial.distance import cdist
 
 from .classifier_model import ClassifierModel
 
+
 class CentroidsClassifier(ClassifierModel):
     def build_classification_model(self, X, y):
         # With binary classification, we always have two classes: 0 and 1
         prototypes = np.zeros((2, X.shape[1]))
-        for i in range(2):  # Directly use 2 instead of num_classes for binary classification
+        for i in range(
+            2
+        ):  # Directly use 2 instead of num_classes for binary classification
             prototypes[i] = X[y == i].mean(axis=0)
         return prototypes
 
     def classify_prototypes(self, X, prototypes):
         # Calculate distances to prototypes using cosine distance
-        distances = cdist(X, prototypes, 'cosine')
+        distances = cdist(X, prototypes, "cosine")
         # Assign labels based on the closest prototype
         return np.argmin(distances, axis=1)
 
@@ -42,7 +45,6 @@ class CentroidsClassifier(ClassifierModel):
         if save:
             self.save_model(coin, prototypes)
 
-    
     def save_model(self, coin_name, prototypes):
         if prototypes is not None:
             model_dir = "proto_models"

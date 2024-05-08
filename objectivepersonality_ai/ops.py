@@ -61,13 +61,14 @@ COINS_DICT = {
 # Optional
 COINS_SOCIAL = {
     FlexFriendsCoin: (FLEX, FRIENDS),
-    GeneralisationSpecialisationCoin: (GENERALISATION, SPECIALISATION)
+    GeneralisationSpecialisationCoin: (GENERALISATION, SPECIALISATION),
 }
 
 COINS_AUXILIARY = {
     "ObserverAxis": ("Se/Ni", "Ne/Si"),
     "DeciderAxis": ("Te/Fi", "Fe/Ti"),
 }
+
 
 @dataclass
 class OpsProfile:
@@ -111,7 +112,10 @@ def decode_op_code(ops) -> OpsProfile:
 
         coins = {
             ModalitySensoryCoin: get_coin_value(
-                modalitySensory == MASCULINE, modalitySensory == FEMININE, MASCULINE, FEMININE
+                modalitySensory == MASCULINE,
+                modalitySensory == FEMININE,
+                MASCULINE,
+                FEMININE,
             ),
             ModalityDeCoin: get_coin_value(
                 modalityDe == MASCULINE, modalityDe == FEMININE, MASCULINE, FEMININE
@@ -177,7 +181,6 @@ def decode_op_code(ops) -> OpsProfile:
         return coins
     else:
         raise ValueError(f"Unable to parse ops string: {ops}")
-
 
 
 def is_observer(value):

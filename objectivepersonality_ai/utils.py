@@ -1,5 +1,6 @@
 import re
 
+
 def normalise_name(name):
     if not isinstance(name, str) or name == "":
         raise ValueError("Filename must be a non-empty string")
