@@ -7,7 +7,7 @@ class EmbeddingModel(metaclass=ABCMeta):
         embeddings = self._embed(sentences)
 
         if not isinstance(embeddings, ndarray):
-            raise TypeError("Embeddings must be a numpy array.")
+            raise TypeError(f"Embeddings must be a numpy array. {embeddings}")
 
         return embeddings
 

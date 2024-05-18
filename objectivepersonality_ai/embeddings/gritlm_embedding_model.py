@@ -18,5 +18,5 @@ class GritLMEmbeddings(EmbeddingModel):
         self.model = GritLM(self.model_name, mode="embedding", torch_dtype="auto")
         self.instruction = self.gritlm_instruction(instruction)
 
-    def _embed(self, sentence):
-        return self.model.encode(sentence, instruction=self.instruction)
+    def _embed(self, sentences):
+        return self.model.encode(sentences, instruction=self.instruction)
