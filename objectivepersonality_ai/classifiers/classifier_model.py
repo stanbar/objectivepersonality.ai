@@ -68,6 +68,8 @@ class ClassifierModel:
     def load_data(self) -> pd.DataFrame:
         df = pd.read_csv(TRANSCRIPTS_WITH_EMBEDDINGS_CSV)
 
+        df = df.dropna(subset=["embeddings"])
+
         df["ObserverAxis"] = np.select(
             [
                 (df["OiOe"] == "Oi") & (df["SN"] == "S"),
