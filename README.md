@@ -65,7 +65,7 @@ To compute embeddings based on the transcripts from `TRANSCRIPTS_CSV` and output
 poetry run append_embeddings.py
 ```
 
-### Run benchmark for all classifiers
+## Run benchmark for all classifiers
 
 To run benchmarks for all classifiers:
 
@@ -80,3 +80,28 @@ This project is licensed under the PolyForm Perimeter License 1.0.1 - see the LI
 # Support
 
 For support, raise an issue in the GitHub issue tracker or contact the maintainers via hello@objectivepersonality.ai
+
+### Compute values
+
+To compute a values of the people in the interviews 
+
+```sh
+ollama serve
+```
+
+```sh
+python3 run values.py
+```
+
+
+### Compute saviours and demons
+
+To compute peoples' demons and saviours
+
+```sh
+ollama serve
+```
+
+```sh
+python3 run saviours_demons.py
+```
