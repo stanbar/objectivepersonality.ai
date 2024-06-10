@@ -23,7 +23,7 @@ class CentroidsClassifier(ClassifierModel):
         # Assign labels based on the closest prototype
         return np.argmin(distances, axis=1)
 
-    def _evaluate(self, X, y, coin):
+    def _evaluate(self, X, y, coin, X_tokens_size):
         kf = KFold(n_splits=5, shuffle=True, random_state=42)
         accuracies = []
 

@@ -39,7 +39,7 @@ class ProtoNetworksClassifier(ClassifierModel):
         self.model = PrototypicalNetwork(input_size, 1024).to(device)
         return self.model
 
-    def _evaluate(self, X, y, coin):
+    def _evaluate(self, X, y, coin, X_tokens_size):
         kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
         accuracies = []
         for fold, (train_index, test_index) in enumerate(kf.split(X, y)):
@@ -82,7 +82,7 @@ class ProtoNetworksClassifier(ClassifierModel):
             ).round()  # Sigmoid and round to get binary predictions
             return predictions.cpu().numpy()
 
-    def _build_from_dataset(self, X, y, coin, save=False):
+    def _build_from_dataset(self, X, y, coin, X_tokens_size, save=False):
         self.model = self.build_classification_model(X.shape[1])
         optimizer = optim.Adam(self.model.parameters(), lr=0.001)
         criterion = nn.BCEWithLogitsLoss()  # Use Binary Cross-Entropy with logits

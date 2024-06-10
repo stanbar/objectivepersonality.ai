@@ -18,7 +18,7 @@ class NeuralNetworkClassifier(ClassifierModel):
         x = layers.Dense(1, activation="sigmoid")(x)
         return keras.Model(inputs=[inputs], outputs=x)
 
-    def _evaluate(self, X, y, coin):
+    def _evaluate(self, X, y, coin, X_tokens_size):
         kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
         histories = {}
         callback = keras.callbacks.EarlyStopping(monitor="accuracy", patience=3)
@@ -80,7 +80,7 @@ class NeuralNetworkClassifier(ClassifierModel):
         plt.savefig(f"plots/{coin_name}_learning_curves.png")
         plt.close()
 
-    def _build_from_dataset(self, X, y, coin, save=False):
+    def _build_from_dataset(self, X, y, coin, X_tokens_size, save=False):
         callback = keras.callbacks.EarlyStopping(monitor="accuracy", patience=3)
         self.model = self.build_classification_model(X.shape[1])
         self.model.compile(
