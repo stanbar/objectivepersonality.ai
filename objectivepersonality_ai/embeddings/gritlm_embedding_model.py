@@ -14,8 +14,8 @@ class GritLMEmbeddings(EmbeddingModel):
         )
 
     def __init__(self, instruction: str = None) -> None:
-        self.model_name = "GritLM/GritLM-7B"
-        self.model = GritLM(self.model_name, mode="embedding", torch_dtype="auto")
+        self.model = GritLM("GritLM/GritLM-8x7B", mode="embedding", torch_dtype="auto", device_map="auto")
+        # self.model = GritLM("GritLM/GritLM-7B", mode="embedding", torch_dtype="auto")
         self.instruction = self.gritlm_instruction(instruction)
 
     def _embed(self, sentences):
