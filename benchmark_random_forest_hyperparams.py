@@ -1,9 +1,9 @@
 def evaluate_random_forest():
-    from objectivepersonality_ai.classifiers.random_forest import (
+    from objectivepersonality_ai.classifiers.random_forest_hyperparams import (
         RandomForestClassifierModel,
     )
 
-    model = RandomForestClassifierModel(True)
+    model = RandomForestClassifierModel()
     model.evaluate()
 
 
