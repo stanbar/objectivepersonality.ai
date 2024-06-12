@@ -5,19 +5,17 @@ from dotenv import load_dotenv, find_dotenv
 import numpy as np
 import pandas as pd
 from sklearn.utils import resample
-
+from imblearn.over_sampling import SMOTE
 
 from objectivepersonality_ai.ops import COINS_AUXILIARY, COINS_DICT
 
 _ = load_dotenv(find_dotenv(usecwd=False, raise_error_if_not_found=True))
 
-TRANSCRIPTS_WITH_EMBEDDINGS_CSV = os.getenv("TRANSCRIPTS_WITH_EMBEDDINGS_CSV")
+TRANSCRIPTS_WITH_EMBEDDINGS_CSV = os.getenv("SAVIORS_AND_DEMONS_WITH_EMBEDDINGS_CSV")
 if TRANSCRIPTS_WITH_EMBEDDINGS_CSV is None:
     raise ValueError("TRANSCRIPTS_WITH_EMBEDDINGS_CSV environment variable is not set")
 
-
 coins = COINS_DICT | COINS_AUXILIARY
-
 
 class ClassifierModel:
 
@@ -38,16 +36,20 @@ class ClassifierModel:
             ]
         )
 
+        if "transcript_tokens_length" not in df.columns:
+            df["transcript_tokens_length"] = 1
+
         X_tokens_size = df["transcript_tokens_length"].values
 
         for coin, classes in coins.items():
             y = df[coin].apply(lambda x: classes.index(x)).values
+            # Balance the dataset
+            # X_balanced, y_balanced, X_tokens_size_balanced = X, y, X_tokens_size
+            X_balanced, y_balanced, X_tokens_size_balanced = self.oversampling(
+                X, y, X_tokens_size
+            )
 
-            # Scale features for neural network suitability
-            # scaler = StandardScaler()
-            # X = scaler.fit_transform(X)
-
-            mean_accuracy = self._build_from_dataset(X, y, coin, X_tokens_size, save=save)
+            mean_accuracy = self._build_from_dataset(X_balanced, y_balanced, coin, X_tokens_size, save=save)
             print(f"Coin {coin}, average accuracy: {mean_accuracy}")
 
     def evaluate(self):
@@ -59,58 +61,58 @@ class ClassifierModel:
             ]
         )
         
+        if "transcript_tokens_length" not in df.columns:
+            df["transcript_tokens_length"] = 1
+
         X_tokens_size = df["transcript_tokens_length"].values
 
         for coin, classes in coins.items():
             y = df[coin].apply(lambda x: classes.index(x)).values
             # Balance the dataset
-            X_balanced, y_balanced, X_tokens_size_balanced = self.balance_dataset(X, y, X_tokens_size)
-
-
-            # Scale features for neural network suitability
-            # scaler = StandardScaler()
-            # X = scaler.fit_transform(X)
+            # X_balanced, y_balanced, X_tokens_size_balanced = X, y, X_tokens_size
+            X_balanced, y_balanced, X_tokens_size_balanced = self.oversampling(
+                X, y, X_tokens_size
+            )
 
             mean_accuracy = self._evaluate(X_balanced, y_balanced, coin, X_tokens_size_balanced)
             print(f"Coin {coin}, average accuracy: {mean_accuracy}")
 
-    def balance_dataset(self, X, y, weights):
-        # Separate the majority and minority classes
-        class_0_mask = (y == 0)
-        class_1_mask = (y == 1)
+    def oversampling(self, X, y, X_tokens_size):
+        smote = SMOTE()
+        X_balanced, y_balanced = smote.fit_resample(X, y)
+        X_tokens_size_balanced = np.ones(X_balanced.shape[0])
+
+        return X_balanced, y_balanced, X_tokens_size_balanced
+
+    def undersampling(self, X, y, weights):
+        # Combine data
+        data = np.column_stack((X, y, weights))
         
-        X_class_0 = X[class_0_mask]
-        y_class_0 = y[class_0_mask]
-        weights_class_0 = weights[class_0_mask]
+        # Separate classes
+        class_0 = data[data[:, -2] == 0]
+        class_1 = data[data[:, -2] == 1]
         
-        X_class_1 = X[class_1_mask]
-        y_class_1 = y[class_1_mask]
-        weights_class_1 = weights[class_1_mask]
+        # Sort classes by weights (last column)
+        class_0 = class_0[class_0[:, -1].argsort()]
+        class_1 = class_1[class_1[:, -1].argsort()]
         
-        # Find the minority class size
-        minority_size = min(len(y_class_0), len(y_class_1))
+        # Find minority size
+        minority_size = min(len(class_0), len(class_1))
         
-        # Undersample the majority class
-        X_class_0_balanced, y_class_0_balanced, weights_class_0_balanced = resample(
-            X_class_0, y_class_0, weights_class_0,
-            replace=False,  # No oversampling
-            n_samples=minority_size,
-            random_state=42
-        )
+        # Keep the highest-weighted entries for balancing
+        class_0_balanced = class_0[-minority_size:]
+        class_1_balanced = class_1[-minority_size:]
         
-        X_class_1_balanced, y_class_1_balanced, weights_class_1_balanced = resample(
-            X_class_1, y_class_1, weights_class_1,
-            replace=False,  # No oversampling
-            n_samples=minority_size,
-            random_state=42
-        )
+        # Combine balanced classes
+        balanced_data = np.vstack((class_0_balanced, class_1_balanced))
         
-        # Combine the balanced classes
-        X_balanced = np.vstack((X_class_0_balanced, X_class_1_balanced))
-        y_balanced = np.hstack((y_class_0_balanced, y_class_1_balanced))
-        weights_balanced = np.hstack((weights_class_0_balanced, weights_class_1_balanced))
+        # Split balanced data
+        X_balanced = balanced_data[:, :-2]
+        y_balanced = balanced_data[:, -2].astype(int)
+        weights_balanced = balanced_data[:, -1]
         
         return X_balanced, y_balanced, weights_balanced
+
     def load_data(self) -> pd.DataFrame:
         df = pd.read_csv(TRANSCRIPTS_WITH_EMBEDDINGS_CSV)
 
