@@ -1,6 +1,6 @@
 # Objective Personality AI
 
-Objective Personality AI (OPAI) is project aimed at developing AI models to predict personality types based on video transcripts. This project utilizes datasets gathered from various sources, including YouTube, and incorporates machine learning techniques to achieve its goal.
+Objective Personality AI (OPAI) is project aimed at developing AI models to classify personality types based on video transcripts. This project utilizes datasets gathered from various sources, including YouTube, and incorporates machine learning techniques to achieve its goal.
 
 ## System Requirements
 
