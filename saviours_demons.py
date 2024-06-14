@@ -39,7 +39,7 @@ def calculate_embeddings(interview: str) -> np.ndarray:
     messages = [
       {
         "role": "user",
-        "content": f"Please give me a list of person's demons and saviours. Demons are person's fears, avoidances, disrespects and neglections. Saviours are person's areas of confidence, responsibility, respects and diligence. The transcript contains metadata consisting of words per second [wps]. Use the metadata to understand the rate of speech and the moments when a person slows down and when he speeds up to recognise demon and savior states. People usually speed up when they are using their saviour functions, and slow down then going into demons. Here is the transcript: \n---\n {interview}"
+        "content": f"Please give me a list of person's demons and saviours. Demons are person's fears, avoidances, disrespects and neglections. Saviours are person's areas of confidence, responsibility, respects and diligence. Here is the transcript: \n---\n {interview}"
         },
     ]
     response = ollama.chat(model='llama3', messages=messages)
