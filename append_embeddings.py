@@ -20,7 +20,7 @@ if "embeddings" not in df.columns:
     df["embeddings"] = np.nan  # Initialize as NaN
 
 # old_promp = "Represent the person's demons, areas of fears and avoidants, and saviours, confidence and responsibility"
-prompt = "Represent the person's demons: fears, avoidances, disrespects and neglections vs saviours: confidence, responsibility, respects and diligence. The transcript contains metadata consisting of words per second [wps]. Use the metadata to understand the rate of speech and the moments when a person slows down and when he speeds up to recognise demon and savior states. People usually speed up when they are using their saviour functions, and slow down then going into demons."
+prompt = "Represent the person's demons: fears, avoidances, disrespects and neglections vs saviours: confidence, responsibility, respects and diligence."
 model = GritLMEmbeddings(
     prompt
 ) 
