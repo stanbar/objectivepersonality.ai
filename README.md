@@ -18,7 +18,7 @@ For alternative models see [MTEB leaderboard](https://huggingface.co/spaces/mteb
 
 The success of AI typing relies heavily on the quality and variety of data it can access. Currently, there are two methods for gathering data:
 
-- Utilizing the dataset created by [Tom Aylott (subtlegradient)](https://huggingface.co/datasets/subtlegradient/aop-dataset-2022-11-10-interview-lines-by-youtube)
+- Utilizing the dataset created by [Tom Aylott (subtlegradient)](https://huggingface.co/datasets/ThingsThatDoStuff/aop-dataset-2022-11-10-interview-lines-by-youtube)
 - Scraping data from YouTube videos using [this project](https://github.com/michalbaldyga/personality-type-prediction-ops/tree/dev/backend/gathering_data)
 
 The repository assumes the dataset is provided in the following CSV format specified in the `.env` file under the `TRANSCRIPTS_CSV=<path_to_dataset.csv>`:
