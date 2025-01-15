@@ -43,6 +43,8 @@ InfoEnergyCoin = INFO + ENERGY
 IntroExtroCoin = INTRO + EXTRO
 FlexFriendsCoin = FLEX + FRIENDS
 GeneralisationSpecialisationCoin = GENERALISATION + SPECIALISATION
+QuadrantCoin = "Quadrant"
+MBTICoin = "MBTI"
 
 COINS_DICT = {
     ModalitySensoryCoin: (FEMININE, MASCULINE),
@@ -85,6 +87,8 @@ class OpsProfile:
     IntroExtro: str
     FlexFriends: str
     ResponsibilitySpecialisation: str
+    Quadrant: str
+    MBTI: str
 
 
 def decode_op_code(ops) -> OpsProfile:
@@ -176,6 +180,8 @@ def decode_op_code(ops) -> OpsProfile:
                 SPECIALISATION,
                 GENERALISATION,
             ),
+            QuadrantCoin: get_quadrant(function1, function2),
+            MBTICoin: get_mbti(function1, function2),
         }
 
         return coins
@@ -275,6 +281,66 @@ def validate_op_code(ops):
     match = PATTERN.match(ops)
     return match is not None and len(match.groups()) >= 8
 
+def is_se_ni(function1, function2):
+    return function1 in ["Se", "Ni"] or function2 in ["Se", "Ni"]
+
+def is_ne_si(function1, function2):
+    return function1 in ["Si", "Ne"] or function2 in ["Si", "Ne"]
+
+def is_te_fi(function1, function2):
+    return function1 in ["Te", "Fi"] or function2 in ["Te", "Fi"]
+
+def is_fe_ti(function1, function2):
+    return function1 in ["Fe", "Ti"] or function2 in ["Fe", "Ti"]
+
+def get_quadrant(function1, function2):
+    if is_se_ni(function1, function2) and is_te_fi(function1, function2):
+        return "Gamma"
+    if is_ne_si(function1, function2) and is_te_fi(function1, function2):
+        return "Delta"
+    if is_se_ni(function1, function2) and is_fe_ti(function1, function2):
+        return "Beta"
+    if is_ne_si(function1, function2) and is_fe_ti(function1, function2):
+        return "Alpha"
+    return None
+
+def get_mbti(function1, function2):
+    # observers
+    if function1 == "Se" and function2 in ["Ti", "Fe"]:
+        return "ESTP"
+    if function1 == "Se" and function2 in ["Fi", "Te"]:
+        return "ESFP"
+    if function1 == "Si" and function2 in ["Te", "Fi"]:
+        return "ISTJ"
+    if function1 == "Si" and function2 in ["Fe", "Ti"]:
+        return "ISFJ"
+    if function1 == "Ne" and function2 in ["Ti", "Fe"]:
+        return "ENTP"
+    if function1 == "Ne" and function2 in ["Fi", "Te"]:
+        return "ENFP"
+    if function1 == "Ni" and function2 in ["Te", "Fi"]:
+        return "INTJ"
+    if function1 == "Ni" and function2 in ["Fe", "Ti"]:
+        return "INFJ"
+
+    # deciders
+    if function1 == "Te" and function2 in ["Si", "Ne"]:
+        return "ESTJ"
+    if function1 == "Te" and function2 in ["Ni", "Se"]:
+        return "ENTJ"
+    if function1 == "Fe" and function2 in ["Si", "Ne"]:
+        return "ESFJ"
+    if function1 == "Fe" and function2 in ["Ni", "Se"]:
+        return "ENFJ"
+    if function1 == "Ti" and function2 in ["Se", "Ni"]:
+        return "ISTP"
+    if function1 == "Ti" and function2 in ["Ne", "Si"]:
+        return "INTP"
+    if function1 == "Fi" and function2 in ["Se", "Ni"]:
+        return "ISFP"
+    if function1 == "Fi" and function2 in ["Ne", "Si"]:
+        return "INFP"
+    return None
 
 def format_coins(coins):
     return f"""Modalities: {coins[ModalitySensoryCoin]}{coins[ModalityDeCoin]}

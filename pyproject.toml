@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "objectivepersonality-ai"
-version = "0.1.0"
+version = "0.1.1"
 description = "Objective Personality AI"
 authors = ["Stanislaw Baranski <stan@stan.bar>"]
 license = "PolyForm Perimeter License 1.0.1"
@@ -25,6 +25,7 @@ keras = "^3.3.3"
 tensorflow = "^2.16.1"
 torch = "^2.3.0"
 matplotlib = "^3.8.4"
+chromadb = "^0.5.0"
 
 
 [build-system]
