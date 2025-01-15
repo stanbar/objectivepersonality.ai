@@ -1,7 +1,5 @@
 from abc import abstractmethod
 import ast
-import os
-from dotenv import load_dotenv, find_dotenv
 import numpy as np
 import pandas as pd
 from sklearn.utils import resample
@@ -9,15 +7,12 @@ from imblearn.over_sampling import SMOTE
 
 from objectivepersonality_ai.ops import COINS_AUXILIARY, COINS_DICT
 
-_ = load_dotenv(find_dotenv(usecwd=False, raise_error_if_not_found=True))
-
-TRANSCRIPTS_WITH_EMBEDDINGS_CSV = os.getenv("SAVIORS_AND_DEMONS_WITH_EMBEDDINGS_CSV")
-if TRANSCRIPTS_WITH_EMBEDDINGS_CSV is None:
-    raise ValueError("TRANSCRIPTS_WITH_EMBEDDINGS_CSV environment variable is not set")
-
 coins = COINS_DICT | COINS_AUXILIARY
 
 class ClassifierModel:
+
+    def __init__(self, dataset_path):
+        self.dataset_path = dataset_path
 
     @abstractmethod
     def _build_from_dataset(self, X, y, coin):
@@ -39,6 +34,9 @@ class ClassifierModel:
         if "transcript_tokens_length" not in df.columns:
             df["transcript_tokens_length"] = 1
 
+        
+        if "transcript_tokens_length" not in df.columns:
+            df["transcript_tokens_length"] = 1
         X_tokens_size = df["transcript_tokens_length"].values
 
         for coin, classes in coins.items():
@@ -60,6 +58,10 @@ class ClassifierModel:
                 for emb in df["embeddings"]
             ]
         )
+        
+        if "transcript_tokens_length" not in df.columns:
+            df["transcript_tokens_length"] = 1
+
         
         if "transcript_tokens_length" not in df.columns:
             df["transcript_tokens_length"] = 1
@@ -113,8 +115,9 @@ class ClassifierModel:
         
         return X_balanced, y_balanced, weights_balanced
 
+
     def load_data(self) -> pd.DataFrame:
-        df = pd.read_csv(TRANSCRIPTS_WITH_EMBEDDINGS_CSV)
+        df = pd.read_csv(self.dataset_path)
 
         df = df.dropna(subset=["embeddings"])
 
