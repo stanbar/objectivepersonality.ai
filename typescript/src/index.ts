@@ -312,3 +312,19 @@ export function calculateOpCode(profile: OpProfile) {
 
   return opCode;
 }
+
+export function normalizeName(name: string): string {
+  // Step 1: Normalize and remove diacritics
+  let result = name.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  // Step 2: Replace whitespace with _
+  result = result.replace(/\s/g, '_');
+  // Step 3: Remove quotes, parentheses, and hyphens
+  result = result.replace(/['"()\-]/g, '');
+  // Step 4: Replace &, . and both / and \ with _
+  result = result.replace(/&/g, '_')
+    .replace(/\./g, '_')
+    .replace(/[\\/]/g, '_');
+  // Step 5: Consolidate multiple _ into a single _ and trim leading/trailing _
+  result = result.replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+  return result;
+}
