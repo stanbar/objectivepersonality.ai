@@ -185,37 +185,35 @@ const GENERALISATION = "Generalisation"
 const SPECIALISATION = "Specialisation"
 const MBTI = "MBTI"
 
-export function decodeOpCode(ops: string): Map<string, string | undefined> {
+export function decodeOpCode(ops: string): OpProfile {
   const match = PATTERN.exec(ops);
   if (match) {
     const [mS, mDe, function1, function2, animal1, animal2, animal3, animal4, social] = match.slice(1, 10);
 
     // Helper function to reduce repetition
-    const getCoinValue = (checkFunction1: boolean, checkFunction2: boolean, value1: string, value2: string) => {
+    const getCoinValue = <T extends string>(checkFunction1: boolean, checkFunction2: boolean, value1: T, value2: T): T | undefined => {
       return checkFunction1 ? value1 : checkFunction2 ? value2 : undefined;
     }
 
-    const coins = new Map<string, string | undefined>([
-      [mSCoin, getCoinValue(mS === MASCULINE, mS === FEMININE, MASCULINE, FEMININE)],
-      [mDeCoin, getCoinValue(mDe === MASCULINE, mDe === FEMININE, MASCULINE, FEMININE)],
-      [ObserverDeciderCoin, isObserver(function1) ? OBSERVER : isDecider(function1) ? DECIDER : undefined],
+    const opProfile: OpProfile = {
+      [mSCoin]: getCoinValue(mS === MASCULINE, mS === FEMININE, MASCULINE, FEMININE) ?? null,
+      [mDeCoin]: getCoinValue(mDe === MASCULINE, mDe === FEMININE, MASCULINE, FEMININE) ?? null,
+      [ObserverDeciderCoin]: isObserver(function1) ? OBSERVER : isDecider(function1) ? DECIDER : null,
+      [DiDeCoin]: getCoinValue(isDi(function1) || isDi(function2), isDe(function1) || isDe(function2), Di, De) ?? null,
+      [OiOeCoin]: getCoinValue(isOi(function1) || isOi(function2), isOe(function1) || isOe(function2), Oi, Oe) ?? null,
+      [NSCoin]: getCoinValue(isSensing(function1) || isSensing(function2), isIntuition(function1) || isIntuition(function2), SENSING, INTUITION) ?? null,
+      [FTCoin]: getCoinValue(isThinking(function1) || isThinking(function2), isFeeling(function1) || isFeeling(function2), THINKING, FEELING) ?? null,
+      [SleepPlayCoin]: getCoinValue(isSleep(animal1) || isSleep(animal2), isPlay(animal1) || isPlay(animal2), SLEEP, PLAY) ?? null,
+      [ConsumeBlastCoin]: getCoinValue(isConsume(animal1) || isConsume(animal2), isBlast(animal1) || isBlast(animal2), CONSUME, BLAST) ?? null,
+      [InfoEnergyCoin]: getCoinValue(isInfo(animal4), isEnergy(animal4), INFO, ENERGY) ?? null,
+      [IntroExtroCoin]: getCoinValue(isIntro(animal4), isExtro(animal4), INTRO, EXTRO) ?? null,
+      [FlexFriendsCoin]: getCoinValue(isFlex(social), isFriends(social), FLEX, FRIENDS) ?? null,
+      [GenSpecCoin]: getCoinValue(isSpec(social), isGen(social), SPECIALISATION, GENERALISATION) ?? null,
+      [QuadrantCoin]: getQuadrant(function1, function2) ?? null,
+      [MBTICoin]: getMBTI(function1, function2) ?? null,
+    };
 
-      [DiDeCoin, getCoinValue(isDi(function1) || isDi(function2), isDe(function1) || isDe(function2), Di, De)],
-      [OiOeCoin, getCoinValue(isOi(function1) || isOi(function2), isOe(function1) || isOe(function2), Oi, Oe)],
-      [NSCoin, getCoinValue(isSensing(function1) || isSensing(function2), isIntuition(function1) || isIntuition(function2), SENSING, INTUITION)],
-      [FTCoin, getCoinValue(isThinking(function1) || isThinking(function2), isFeeling(function1) || isFeeling(function2), THINKING, FEELING)],
-      [SleepPlayCoin, getCoinValue(isSleep(animal1) || isSleep(animal2), isPlay(animal1) || isPlay(animal2), SLEEP, PLAY)],
-      [ConsumeBlastCoin, getCoinValue(isConsume(animal1) || isConsume(animal2), isBlast(animal1) || isBlast(animal2), CONSUME, BLAST)],
-      [InfoEnergyCoin, getCoinValue(isInfo(animal4), isEnergy(animal4), INFO, ENERGY)],
-      [IntroExtroCoin, getCoinValue(isIntro(animal4), isExtro(animal4), INTRO, EXTRO)],
-      [FlexFriendsCoin, getCoinValue(isFlex(social), isFriends(social), FLEX, FRIENDS)],
-      [GenSpecCoin, getCoinValue(isSpec(social), isGen(social), SPECIALISATION, GENERALISATION)],
-      [QuadrantCoin, getQuadrant(function1, function2)],
-      [MBTI, getMBTI(function1, function2)],
-    ]);
-
-
-    return coins;
+    return opProfile;
   } else {
     throw new Error(`Unable to parse ops string: ${ops}`);
   }
