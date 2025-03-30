@@ -85,10 +85,15 @@ export type OpResult = OpProfile &
 
 
 
-const PATTERN = /([FMx])([FMx])-([SNFTx][iex])\/([SNFTx][iex])-([SPBCx])([SPBCx])\/([SPBCx])\(([SPBCx])\)(?: \[(\d)\])?/;
+// FF-Ti/Si-SB/P(C) [1]
+const PATTERN_SUBIJECTIVE = /^(?:([FMx])([FMx])-)?([SNFTx][iex])\/([SNFTx][iex])-([SPBCx])([SPBCx])\/([SPBCx])\(([SPBCx])\)(?: \[(\d)\])?$/;
+// FF-Ti/Si-SB/P(C) #1
+const PATTERN_DS = /^(?:([FMx])([FMx])-)?([SNFTx][iex])\/([SNFTx][iex])-([SPBCx])([SPBCx])\/([SPBCx])\(([SPBCx])\)(?: \[(\d)\])?$/;
+// FF-TiSi-SBPC-1
+const PATTERN_SIMPLE = /^(?:([FMx])([FMx])-)?([SNFTx][iex])([SNFTx][iex])-([SPBCx])([SPBCx])([SPBCx])([SPBCx])(?:-(\d))?$/;
 
 export function validateOpCode(ops: string) {
-  const match = PATTERN.exec(ops);
+  const match = PATTERN_SUBIJECTIVE.exec(ops);
   return match && match.length >= 8
 }
 
@@ -185,41 +190,81 @@ const GENERALISATION = "Generalisation"
 const SPECIALISATION = "Specialisation"
 const MBTI = "MBTI"
 
-export function decodeOpCode(ops: string): OpProfile {
-  const match = PATTERN.exec(ops);
-  if (match) {
-    const [mS, mDe, function1, function2, animal1, animal2, animal3, animal4, social] = match.slice(1, 10);
+function parseOpsCode(ops: string): string[] {
+  let match = PATTERN_SIMPLE.exec(ops);
+  if (!match)
+    match = PATTERN_SUBIJECTIVE.exec(ops);
+  if (!match)
+    match = PATTERN_DS.exec(ops);
+  if (!match)
+    throw new Error(`Unable to parse ops code: ${ops}, please use a following format FF-TiSi-SBPC-1`);
 
-    // Helper function to reduce repetition
-    const getCoinValue = <T extends string>(checkFunction1: boolean, checkFunction2: boolean, value1: T, value2: T): T | undefined => {
-      return checkFunction1 ? value1 : checkFunction2 ? value2 : undefined;
-    }
-
-    const opProfile: OpProfile = {
-      [mSCoin]: getCoinValue(mS === MASCULINE, mS === FEMININE, MASCULINE, FEMININE) ?? null,
-      [mDeCoin]: getCoinValue(mDe === MASCULINE, mDe === FEMININE, MASCULINE, FEMININE) ?? null,
-      [ObserverDeciderCoin]: isObserver(function1) ? OBSERVER : isDecider(function1) ? DECIDER : null,
-      [DiDeCoin]: getCoinValue(isDi(function1) || isDi(function2), isDe(function1) || isDe(function2), Di, De) ?? null,
-      [OiOeCoin]: getCoinValue(isOi(function1) || isOi(function2), isOe(function1) || isOe(function2), Oi, Oe) ?? null,
-      [NSCoin]: getCoinValue(isSensing(function1) || isSensing(function2), isIntuition(function1) || isIntuition(function2), SENSING, INTUITION) ?? null,
-      [FTCoin]: getCoinValue(isThinking(function1) || isThinking(function2), isFeeling(function1) || isFeeling(function2), THINKING, FEELING) ?? null,
-      [SleepPlayCoin]: getCoinValue(isSleep(animal1) || isSleep(animal2), isPlay(animal1) || isPlay(animal2), SLEEP, PLAY) ?? null,
-      [ConsumeBlastCoin]: getCoinValue(isConsume(animal1) || isConsume(animal2), isBlast(animal1) || isBlast(animal2), CONSUME, BLAST) ?? null,
-      [InfoEnergyCoin]: getCoinValue(isInfo(animal4), isEnergy(animal4), INFO, ENERGY) ?? null,
-      [IntroExtroCoin]: getCoinValue(isIntro(animal4), isExtro(animal4), INTRO, EXTRO) ?? null,
-      [FlexFriendsCoin]: getCoinValue(isFlex(social), isFriends(social), FLEX, FRIENDS) ?? null,
-      [GenSpecCoin]: getCoinValue(isSpec(social), isGen(social), SPECIALISATION, GENERALISATION) ?? null,
-      [QuadrantCoin]: getQuadrant(function1, function2) ?? null,
-      [MBTICoin]: getMBTI(function1, function2) ?? null,
-    };
-
-    return opProfile;
-  } else {
-    throw new Error(`Unable to parse ops string: ${ops}`);
-  }
-
+  return match.slice(1, 10);
 }
 
+// Helper function to reduce repetition
+const getCoinValue = <T extends string>(checkFunction1: boolean, checkFunction2: boolean, value1: T, value2: T): T | undefined => {
+  return checkFunction1 ? value1 : checkFunction2 ? value2 : undefined;
+}
+
+export function decodeOpCode(ops: string): OpProfile {
+  const [mS, mDe, function1, function2, animal1, animal2, animal3, animal4, social] = parseOpsCode(ops);
+
+  const opProfile: OpProfile = {
+    [mSCoin]: getCoinValue(mS === MASCULINE, mS === FEMININE, MASCULINE, FEMININE) ?? null,
+    [mDeCoin]: getCoinValue(mDe === MASCULINE, mDe === FEMININE, MASCULINE, FEMININE) ?? null,
+    [ObserverDeciderCoin]: isObserver(function1) ? OBSERVER : isDecider(function1) ? DECIDER : null,
+    [DiDeCoin]: getCoinValue(isDi(function1) || isDi(function2), isDe(function1) || isDe(function2), Di, De) ?? null,
+    [OiOeCoin]: getCoinValue(isOi(function1) || isOi(function2), isOe(function1) || isOe(function2), Oi, Oe) ?? null,
+    [NSCoin]: getCoinValue(isSensing(function1) || isSensing(function2), isIntuition(function1) || isIntuition(function2), SENSING, INTUITION) ?? null,
+    [FTCoin]: getCoinValue(isThinking(function1) || isThinking(function2), isFeeling(function1) || isFeeling(function2), THINKING, FEELING) ?? null,
+    [SleepPlayCoin]: getCoinValue(isSleep(animal1) || isSleep(animal2), isPlay(animal1) || isPlay(animal2), SLEEP, PLAY) ?? null,
+    [ConsumeBlastCoin]: getCoinValue(isConsume(animal1) || isConsume(animal2), isBlast(animal1) || isBlast(animal2), CONSUME, BLAST) ?? null,
+    [InfoEnergyCoin]: getCoinValue(isInfo(animal4), isEnergy(animal4), INFO, ENERGY) ?? null,
+    [IntroExtroCoin]: getCoinValue(isIntro(animal4), isExtro(animal4), INTRO, EXTRO) ?? null,
+    [FlexFriendsCoin]: getCoinValue(isFlex(social), isFriends(social), FLEX, FRIENDS) ?? null,
+    [GenSpecCoin]: getCoinValue(isSpec(social), isGen(social), SPECIALISATION, GENERALISATION) ?? null,
+    [QuadrantCoin]: getQuadrant(function1, function2) ?? null,
+    [MBTICoin]: getMBTI(function1, function2) ?? null,
+  };
+  return opProfile;
+}
+
+export function breakdownOpCode(ops: string): string {
+  const [mS, mDe, function1, function2, animal1, animal2, animal3, animal4, social] = parseOpsCode(ops);
+
+  const observerDecider = isObserver(function1) ? "Observer" : isDecider(function1) ? "Decider" : null;
+  const diDe = getCoinValue(isDi(function1) || isDi(function2), isDe(function1) || isDe(function2), "Di", "De") ?? null;
+  const oiOe = getCoinValue(isOi(function1) || isOi(function2), isOe(function1) || isOe(function2), "Oi", "Oe") ?? null;
+  const ns = getCoinValue(isSensing(function1) || isSensing(function2), isIntuition(function1) || isIntuition(function2), "Sensory", "Intuitive") ?? null;
+  const ft = getCoinValue(isThinking(function1) || isThinking(function2), isFeeling(function1) || isFeeling(function2), 'Thinker', "Feeler") ?? null;
+  const sleepPlay = getCoinValue(isSleep(animal1) || isSleep(animal2), isPlay(animal1) || isPlay(animal2), "Sleep", "Play") ?? null;
+  const consumeBlast = getCoinValue(isConsume(animal1) || isConsume(animal2), isBlast(animal1) || isBlast(animal2), "Consume", "Blast") ?? null;
+  const infoEnergy = getCoinValue(isInfo(animal4), isEnergy(animal4), INFO, ENERGY) ?? null;
+  const introExtro = getCoinValue(isIntro(animal4), isExtro(animal4), "Introvert", "Extrovert") ?? null;
+  const flexFriends = getCoinValue(isFlex(social), isFriends(social), "Flex (Self-motivated)", "Friends (Tribe-motivated)") ?? null;
+  const genSpec = getCoinValue(isSpec(social), isGen(social), "Specialisation", "Generalisation") ?? null;
+
+  let lastAnimal = "";
+  if (infoEnergy === INFO && introExtro === "Introvert") {
+    lastAnimal = "Play last"
+  } else if (infoEnergy === INFO && introExtro === "Extrovert") {
+    lastAnimal = "Sleep last"
+  } else if (infoEnergy === ENERGY && introExtro === "Introvert") {
+    lastAnimal = "Blast last"
+  } else if (infoEnergy === ENERGY && introExtro === "Extrovert") {
+    lastAnimal = "Consume last"
+  }
+
+  let breakdown = `${observerDecider}, ${observerDecider == OBSERVER ? oiOe : diDe}, ${observerDecider == OBSERVER ? diDe : oiOe}, ${lastAnimal}, ${ft}, ${ns}, ${function1}, ${function2}, ${sleepPlay}, ${consumeBlast}, ${introExtro}`
+  if (flexFriends) {
+    breakdown = `${breakdown}, ${flexFriends}`;
+  }
+  if (genSpec) {
+    breakdown = `${breakdown}, ${genSpec}`;
+  }
+  return breakdown
+}
 
 export function validateProperties(properties: { [key: string]: any }) {
   try {
@@ -270,7 +315,6 @@ export function calculateOpCode(profile: OpProfile) {
   const FlexFriends = profile[FlexFriendsCoin];
   const GeneralisationSpecialisation = profile[GenSpecCoin];
 
-
   // Calculate observer and decider functions
   const observerFunction: "Si" | "Se" | "Ni" | "Ne" | "Ox" = SN === SENSING ? (OiOe === "Oi" ? "Si" : "Se")
     : SN === INTUITION ? (OiOe === "Oi" ? "Ni" : "Ne")
@@ -306,9 +350,9 @@ export function calculateOpCode(profile: OpProfile) {
       : undefined);
 
   // Construct the op-code
-  const functions = `${function1}/${function2}`;
-  const animals = `${firstAnimal[0]}${(secondAnimal ?? "X")[0]}/${missingAnimal[0]}(${lastAnimal[0]})`;
-  const opCode = `${mS ?? "x"}${mDe ?? "x"}-${functions}-${animals}${socialType ? ` [${socialType}]` : ""}`;
+  const functions = `${function1}${function2}`;
+  const animals = `${firstAnimal[0]}${(secondAnimal ?? "X")[0]}${missingAnimal[0]}${lastAnimal[0]}`;
+  const opCode = `${mS ?? "x"}${mDe ?? "x"}-${functions}${animals}${socialType ? `-${socialType}` : ""}`;
 
   return opCode;
 }
