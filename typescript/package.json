@@ -1,6 +1,6 @@
 {
   "name": "@objectivepersonality/utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ops utils",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

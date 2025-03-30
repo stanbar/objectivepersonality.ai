@@ -86,16 +86,11 @@ export type OpResult = OpProfile &
 
 
 // FF-Ti/Si-SB/P(C) [1]
-const PATTERN_SUBIJECTIVE = /^(?:([FMx])([FMx])-)?([SNFTx][iex])\/([SNFTx][iex])-([SPBCx])([SPBCx])\/([SPBCx])\(([SPBCx])\)(?: \[(\d)\])?$/;
+export const PATTERN_SUBIJECTIVE = /^(?:([FMx])([FMx])-)?([SNFTx][iex])\/([SNFTx][iex])-([SPBCx])([SPBCx])\/([SPBCx])\(([SPBCx])\)(?: \[(\d)\])?$/;
 // FF-Ti/Si-SB/P(C) #1
-const PATTERN_DS = /^(?:([FMx])([FMx])-)?([SNFTx][iex])\/([SNFTx][iex])-([SPBCx])([SPBCx])\/([SPBCx])\(([SPBCx])\)(?: \[(\d)\])?$/;
+export const PATTERN_DS = /^(?:([FMx])([FMx])-)?([SNFTx][iex])\/([SNFTx][iex])-([SPBCx])([SPBCx])\/([SPBCx])\(([SPBCx])\)(?: \[(\d)\])?$/;
 // FF-TiSi-SBPC-1
-const PATTERN_SIMPLE = /^(?:([FMx])([FMx])-)?([SNFTx][iex])([SNFTx][iex])-([SPBCx])([SPBCx])([SPBCx])([SPBCx])(?:-(\d))?$/;
-
-export function validateOpCode(ops: string) {
-  const match = PATTERN_SUBIJECTIVE.exec(ops);
-  return match && match.length >= 8
-}
+export const PATTERN_SIMPLE = /^(?:([FMx])([FMx])-)?([SNFTx][iex])([SNFTx][iex])-([SPBCx])([SPBCx])([SPBCx])([SPBCx])(?:-(\d))?$/;
 
 const isObserver = (value: string) => ["Si", "Se", "Ni", "Ne", "Oe", "Oi", "Sx", "Nx"].includes(value);
 const isDecider = (value: string) => ["Ti", "Te", "Fi", "Fe", "De", "Di", "Tx", "Fx"].includes(value);
@@ -190,7 +185,7 @@ const GENERALISATION = "Generalisation"
 const SPECIALISATION = "Specialisation"
 const MBTI = "MBTI"
 
-function parseOpsCode(ops: string): string[] {
+export function parseOpsCode(ops: string): string[] {
   let match = PATTERN_SIMPLE.exec(ops);
   if (!match)
     match = PATTERN_SUBIJECTIVE.exec(ops);
