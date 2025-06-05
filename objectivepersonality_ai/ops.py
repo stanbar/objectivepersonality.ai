@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from typing import Optional
 
 # Constants (keys and type values)
-mSCoin = "mS"
-mDeCoin = "mDe"
+ModalitySensoryCoin = "mS"
+ModalityDeCoin = "mDe"
 ObserverDeciderCoin = "ObserverDecider"
 DiDeCoin = "DiDe"
 OiOeCoin = "OiOe"
@@ -51,8 +51,8 @@ PATTERN = re.compile(
 
 @dataclass
 class OpProfile:
-    mS: Optional[str]
-    mDe: Optional[str]
+    ModalitySensoryCoin: Optional[str]
+    ModalityDeCoin: Optional[str]
     ObserverDecider: Optional[str]
     DiDe: Optional[str]
     OiOe: Optional[str]
@@ -293,7 +293,7 @@ def decode_op_code(ops: str) -> OpProfile:
     """
     match = PATTERN.search(ops)
     if match:
-        mS_val, mDe_val, func1, func2, animal1, animal2, animal3, animal4, social = (
+        modalitySensory, modalityDe, func1, func2, animal1, animal2, animal3, animal4, social = (
             match.groups()[:9]
         )
 
@@ -303,12 +303,12 @@ def decode_op_code(ops: str) -> OpProfile:
             return value1 if check1 else value2 if check2 else None
 
         op_profile = OpProfile(
-            mS=get_coin_value(
-                mS_val == MASCULINE, mS_val == FEMININE, MASCULINE, FEMININE
+            ModalitySensoryCoin=get_coin_value(
+                modalitySensory == MASCULINE, modalitySensory == FEMININE, MASCULINE, FEMININE
             )
             or None,
-            mDe=get_coin_value(
-                mDe_val == MASCULINE, mDe_val == FEMININE, MASCULINE, FEMININE
+            ModalityDeCoin=get_coin_value(
+                modalityDe == MASCULINE, modalityDe == FEMININE, MASCULINE, FEMININE
             )
             or None,
             ObserverDecider=(
@@ -377,8 +377,8 @@ def decode_op_code(ops: str) -> OpProfile:
 
 
 COINS_DICT = {
-    mSCoin: (FEMININE, MASCULINE),
-    mDeCoin: (FEMININE, MASCULINE),
+    ModalitySensoryCoin: (FEMININE, MASCULINE),
+    ModalityDeCoin: (FEMININE, MASCULINE),
     ObserverDeciderCoin: (OBSERVER, DECIDER),
     DiDeCoin: (DI, DE),
     OiOeCoin: (OI, OE),
@@ -403,7 +403,7 @@ COINS_AUXILIARY = {
 
 
 def format_coins(coins):
-    return f"""Modalities: {coins[mSCoin]}{coins[mDeCoin]}
+    return f"""Modalities: {coins[ModalitySensoryCoin]}{coins[ModalityDeCoin]}
 ObserverDecider: {coins[ObserverDeciderCoin]}
 DiDe: {coins[DiDeCoin]}
 OiOe: {coins[OiOeCoin]}
