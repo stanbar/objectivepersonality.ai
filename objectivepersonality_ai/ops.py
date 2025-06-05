@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from typing import Optional
 
 # Constants (keys and type values)
-ModalitySensoryCoin = "mS"
-ModalityDeCoin = "mDe"
+ModalitySensoryCoin = "ModalitySensory"
+ModalityDeCoin = "ModalityDe"
 ObserverDeciderCoin = "ObserverDecider"
 DiDeCoin = "DiDe"
 OiOeCoin = "OiOe"
